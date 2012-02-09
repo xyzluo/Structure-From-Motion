@@ -1,0 +1,38 @@
+#camera S7 calibration data
+# object is a rect plane facing camera
+
+# 1:1 -- 2160:2160 (4.7M)
+dX = 144 # obj_width
+dY = 121 # obj_height
+dZ = 600 # camera to object
+
+# corner_ul=[850,681]
+# corner_ll=[857,1149]
+# corner_ur=[1407,672]
+# corner_lr=[1411,1141]
+# dx = corner_lr[0] - corner_ll[0]
+# dy = corner_lr[1] - corner_ur[1]
+
+# dx = corner_ur[0] - corner_ul[0]
+# dy = corner_ll[1] - corner_ul[1]
+dx = 556
+dy = 468
+
+fx = dx*dZ/dX # 2320
+fy = dy*dZ/dY # 2320
+
+# 16:9 -- 4032:2268 (9.1M)
+corner_ul =[1561,586]
+corner_ll =[1564,1237]
+corner_ur =[2334,581]
+corner_lr =[2337,1231]
+# dx = corner_lr[0] - corner_ll[0]
+# dy = corner_lr[1] - corner_ur[1]
+
+# dx = corner_ur[0] - corner_ul[0]
+# dy = corner_ll[1] - corner_ul[1]
+dx = 773
+dy = 650
+
+fx = dx*dZ/dX #3221
+fy = dy*dZ/dY #3228

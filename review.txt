@@ -1,0 +1,29 @@
+Problem#1. 8-point algorithm
+8-point algorithm is typically used to solve essential matrix E, based on which to solve camera motion. It works when 8 or more matching points are found from two views.
+It's implementation usually involve first building a linear transformation and then compute linear least square by SVD decomposition, followed by setting the last singular value as zero because E must be rank 2.
+When solving the linear equation the result is often ill-conditioned,  the resulting fundamental matrix may not be useful for determining epipolar constraints.[7] 
+To solve the problem OpenCV adapt isotropic normalization to input data, for example.
+Pros:
+It's implementation is simple. With normalization of inputs, it runs fast and stable [2]. 
+Cons:
+Because the essential matrix is defined up to scale, so is translation (t)decomposed from it. It needs additional information to get the scale. 
+It doesn't work when detected feature points are nearly coplanar or there is no camera translation (pure rotation). In that case Homography(H) should be considered as well. Choose whichever has smaller re-projection error.
+If 3D points and their projection locations are available, PnP method can be used to compute camera motion. Comparing to 8-point method, a Direct Linear Transformation Pnp needs 6 point pairs.
+All these method depends on matched feature points. Computing reliable feature points like SIFT can be a heavy cpu load, this is a limitation for real-time usage. An alternative way is direct visual inertial method.[1] 
+which is claimed suitable for real-time scenario since ignored feature calculation.  
+
+Problem#2
+For this problem, all requested computer vision task can be done with help of OpenCV provided APIs. The source code is commented with details about data structures used and their purpose.
+Some observations shows that the feature detection and feature matching, while quite reliable, is speed bottleneck. The solution provided here is try to pre-calculate all images features, to void repeating computation. For feature type, my solution deployed SURf feature detector, which is claimed faster than SIFT but less accurate.
+If image database contains large mount of pictures, identify a object in a scene image can be very slow. 
+At this point CC.Wu's SIFT-GPU is worth to try. If a Nvidia GPU is available, another group of object detection method such as SSD, Yolo, Faster R-CNN should be considered. For example, firstly use Yolo to locate a object and tell what category it is, then use feature matching to check if the object match those in database. 
+But there might be some potential challenge such as obtaining labeled data and training a model if an off-the-shelf model doesn't include requested class. 
+
+This assignment refers to but not limited to these materials:
+[1] Multiple View Geometry in Computer Vision https://www.amazon.ca/Multiple-View-Geometry-Computer-Vision/dp/0521540518
+[2] Richard I. Hartley http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/f07/proj_final/www/amichals/fundamental.pdf
+[3] Programming Computer Vision with Python: Tools and algorithms for analyzing images https://www.amazon.ca/Programming-Computer-Vision-Python-algorithms/dp/1449316549/ref=sr_1_1?s=books&ie=UTF8&qid=1536804951&sr=1-1&keywords=computer+vision+python
+[4] https://www.cnblogs.com/gaoxiang12/p/3695962.html
+[5] http://wavelab.uwaterloo.ca/slam/2017-SLAM/Lecture14-Direct_visual_inertial_odometry_and_SLAM/slides.pdf
+[6] http://wwwx.cs.unc.edu/~ccwu/cgi-bin/siftgpu.cgi
+[7] https://en.wikipedia.org/wiki/Eight-point_algorithm
